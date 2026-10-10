@@ -1,0 +1,3 @@
+import AuctionHouse from '@/components/AuctionHouse';
+import CurrencyConverter from '@/components/CurrencyConverter';
+export default function Auctions() { return <main className="px-6 py-10 md:px-12"><div className="mx-auto max-w-[1400px]"><p className="eyebrow">Community market / Saturday midday</p><h1 className="page-title">The room is live.</h1><p className="mt-5 max-w-2xl text-lg leading-7 text-black/55">Creator-led auctions for the things that make an island feel like yours. Every bid is reserved in automated escrow until the clock closes.</p><div className="mt-10"><AuctionHouse /></div><div className="mt-8 max-w-2xl"><CurrencyConverter /></div></div></main>; }

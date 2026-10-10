@@ -1,0 +1,7 @@
+'use client';
+import { useCallback, useState } from 'react';
+import IslandCanvas, { type Island, type Property } from '@/components/IslandCanvas';
+import RealEstateModal from '@/components/RealEstateModal';
+import EResidencyGateway from '@/components/EResidencyGateway';
+import SafeChat from '@/components/SafeChat';
+export default function World() { const [island, setIsland] = useState<Island | null>(null); const [property, setProperty] = useState<Property | null>(null); const onIsland = useCallback((value: Island) => setIsland(value), []); return <main className="px-6 py-10 md:px-12"><div className="mx-auto max-w-[1500px]"><p className="eyebrow">World map / 04</p><h1 className="page-title">The islands are connected.</h1><p className="mt-5 max-w-2xl text-lg leading-7 text-black/55">Pan across the Lesser Antilles, select a capital, and inspect the real estate nodes that power the learning economy.</p><div className="mt-10 grid gap-6 lg:grid-cols-[1fr_330px]"><div><IslandCanvas onSelectIsland={onIsland} onSelectProperty={setProperty} /><div className="mt-4 flex flex-wrap gap-2">{island && <span className="rounded-full bg-black px-4 py-2 text-xs font-bold text-white">{island.capital} selected</span>}<span className="rounded-full bg-black/5 px-4 py-2 text-xs font-bold">Click nodes to inspect leases</span><span className="rounded-full bg-black/5 px-4 py-2 text-xs font-bold">Scroll to zoom · drag to pan</span></div></div><EResidencyGateway /></div></div><RealEstateModal property={property} onClose={() => setProperty(null)} /><SafeChat /></main>; }

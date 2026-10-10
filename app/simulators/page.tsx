@@ -1,0 +1,2 @@
+import MarketSimulator from '@/components/MarketSimulator';
+export default function Simulators() { return <main className="px-6 py-10 md:px-12"><div className="mx-auto max-w-[1400px]"><p className="eyebrow">Practice floor / 02</p><h1 className="page-title">Learn the market without the downside.</h1><p className="mt-5 max-w-2xl text-lg leading-7 text-black/55">Trade simulated ANTX/USD and regional index assets, then test the financial literacy decisions behind every candle.</p><div className="mt-10"><MarketSimulator /></div></div></main>; }

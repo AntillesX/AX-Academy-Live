@@ -1,0 +1,2 @@
+import LotteryPortal from '@/components/LotteryPortal';
+export default function Lotteries() { return <main className="px-6 py-10 md:px-12"><div className="mx-auto max-w-[1200px]"><p className="eyebrow">Community draws / weekly</p><h1 className="page-title">Every island gets a shot.</h1><p className="mt-5 max-w-2xl text-lg leading-7 text-black/55">Two weekly pools, transparent ticket batches, and jackpots that grow with every learner who plays.</p><div className="mt-10"><LotteryPortal /></div></div></main>; }

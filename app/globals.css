@@ -1,0 +1,8 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+:root { color-scheme: light; }
+body { margin: 0; background: #f3f1ea; color: #121212; font-family: Arial, Helvetica, sans-serif; }
+* { box-sizing: border-box; }
+.eyebrow { color: #8da600; font-size: 0.72rem; font-weight: 800; letter-spacing: .28em; text-transform: uppercase; }
+.page-title { margin-top: 1.25rem; max-width: 900px; font-size: clamp(3.5rem, 9vw, 8rem); font-weight: 900; letter-spacing: -.085em; line-height: .88; }
