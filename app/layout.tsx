@@ -2,6 +2,7 @@ import './globals.css';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import StudyMusicPlayer from '@/components/StudyMusicPlayer';
+import BroadcastBanner from '@/components/BroadcastBanner';
 
 export const metadata = {
   title: 'AX-Academy Live | Learn the Caribbean, build the future',
@@ -13,6 +14,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en">
       <body>
         <Header />
+        <BroadcastBanner />
         <main className="min-h-screen pt-24">{children}</main>
         <Footer />
         <StudyMusicPlayer />
