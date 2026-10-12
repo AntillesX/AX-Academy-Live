@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { requireAdmin } from '@/lib/admin';
 import { supabaseAdmin } from '@/lib/supabase-admin';
-import { READY_CSEC_NODES, READY_CSEC_MODULES, READY_CSEC_SUBJECTS, READY_CSEC_TOPICS } from '@/lib/csec-curriculum';
+import { READY_CSEC_NODES, READY_CSEC_MODULES, READY_CSEC_SUBJECTS, READY_CSEC_TOPICS } from '@/lib/curriculumData';
 export const dynamic = 'force-dynamic';
 
 type Subject = typeof READY_CSEC_SUBJECTS[number];

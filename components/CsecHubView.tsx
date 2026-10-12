@@ -1,7 +1,7 @@
 'use client';
 import { useEffect, useMemo, useState } from 'react';
 import SubjectCard from '@/components/SubjectCard';
-import { READY_CSEC_MODULES, READY_CSEC_NODES, READY_CSEC_SUBJECTS, READY_CSEC_TOPICS, type CsecModule, type CsecNode, type CsecSubject, type CsecTopic } from '@/lib/csec-curriculum';
+import { READY_CSEC_MODULES, READY_CSEC_NODES, READY_CSEC_SUBJECTS, READY_CSEC_TOPICS, type CsecModule, type CsecNode, type CsecSubject, type CsecTopic } from '@/lib/curriculumData';
 export default function CsecHubView() {
   const [subjects, setSubjects] = useState<CsecSubject[]>(READY_CSEC_SUBJECTS); const [modules, setModules] = useState<CsecModule[]>(READY_CSEC_MODULES); const [topics, setTopics] = useState<CsecTopic[]>(READY_CSEC_TOPICS); const [nodes, setNodes] = useState<CsecNode[]>(READY_CSEC_NODES); const [selectedCode, setSelectedCode] = useState('MATH'); const [source, setSource] = useState('fallback');
   useEffect(() => { fetch('/api/curriculum').then(response => response.json()).then(data => { if (Array.isArray(data.subjects) && data.subjects.length) setSubjects(data.subjects); if (Array.isArray(data.modules) && data.modules.length) setModules(data.modules); if (Array.isArray(data.topics) && data.topics.length) setTopics(data.topics); if (Array.isArray(data.nodes) && data.nodes.length) setNodes(data.nodes); setSource(data.source || 'fallback'); }).catch(() => undefined); }, []);
