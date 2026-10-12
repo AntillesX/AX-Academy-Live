@@ -5,16 +5,16 @@ import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 
 const CARIBBEAN_COUNTRIES = [
-  'Antigua and Barbuda',
+  'Regional Network and Barbuda',
   'Bahamas',
-  'Barbados',
+  'Community Learning',
   'Dominica',
-  'Grenada',
-  'Jamaica',
+  'Community Learning',
+  'Regional Learning',
   'Saint Kitts and Nevis',
   'Saint Lucia',
   'Saint Vincent and the Grenadines',
-  'Trinidad and Tobago',
+  'Community Network',
   'Other / International'
 ]
 

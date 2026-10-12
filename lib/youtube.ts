@@ -1,7 +1,8 @@
-export type YouTubeTrack = { id: string; title: string; channel: string; duration?: string };
+export type AudioTopic = 'study' | 'meditation';
+export type YouTubeTrack = { id: string; title: string; channel: string; topic: AudioTopic; duration?: string };
 export const DEFAULT_TRACKS: YouTubeTrack[] = [
-  { id: process.env.NEXT_PUBLIC_YOUTUBE_AUDIO_VIDEO_ID || 'jfKfPfyJRdk', title: 'lofi hip hop radio', channel: 'Lofi Girl' },
-  { id: '5qap5aO4i9A', title: 'lofi beats to relax/study to', channel: 'Lofi Girl' },
+  { id: process.env.NEXT_PUBLIC_YOUTUBE_AUDIO_VIDEO_ID || 'jfKfPfyJRdk', title: 'Study Music', channel: 'Focus channel', topic: 'study' },
+  { id: process.env.NEXT_PUBLIC_YOUTUBE_MEDITATION_VIDEO_ID || '5qap5aO4i9A', title: 'Meditation Vibes', channel: 'Calm channel', topic: 'meditation' },
 ];
 export function youtubeEmbedUrl(videoId: string) { return `https://www.youtube-nocookie.com/embed/${encodeURIComponent(videoId)}?autoplay=0&controls=1&rel=0`; }
 export function isYouTubeVideoId(value: string) { return /^[A-Za-z0-9_-]{11}$/.test(value); }
