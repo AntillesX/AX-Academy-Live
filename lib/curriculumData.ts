@@ -1,2 +1,2 @@
-/** Compatibility entry point for the complete published curriculum fallback catalog. */
+/** Complete published curriculum fallback catalog: Mathematics, IT, Physics, and Chemistry. */
 export * from './csec-curriculum';
