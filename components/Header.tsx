@@ -4,7 +4,7 @@ import { usePathname } from 'next/navigation';
 
 const links = [
   ['⌂', 'Dashboard', '/dashboard'], ['▣', 'CSEC Hub', '/curriculum'], ['✦', 'Arcade', '/games'],
-  ['↗', 'Market Sim', '/emulator'], ['◈', 'UGC Shop', '/marketplace'],
+  ['↗', 'Market Sim', '/emulator'], ['◈', 'UGC Shop', '/marketplace'], ['◎', 'Community', '/community'],
 ];
 export default function Header() {
   const pathname = usePathname();
