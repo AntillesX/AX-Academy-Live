@@ -12,7 +12,7 @@ const navCards = [
   ['Learning Path', 'Continue Functions & graphs · 68% complete.', '/curriculum', '⌁'],
   ['Live Cohorts', 'Find a guided study circle and safe peer rhythm.', '/community', '◎'],
   ['Skill Calibration', 'Run a short diagnostic to tune your next steps.', '/dashboard', '◌'],
-  ['Focus Arcade', 'Five-minute recall and attention missions.', '/games', '✦'],
+  ['Focus Arcade', 'Five-minute recall and attention missions.', '/arcade', '✦'],
   ['Market Sim', 'Practise patient decisions in a closed-loop sandbox.', '/emulator', '↗'],
 ] as const;
 const achievementLog = ['Functions & graphs · checkpoint cleared', '7-day focus streak · protected', 'Caribbean cohort sync · current'];
