@@ -31,8 +31,9 @@ export type AntxVelocity4DProps = {
 };
 type Notice = { id: number; text: string; sub: string; until: number };
 type Crack = { x: number; y: number; seed: number };
-type AnimalKind = 'chicken' | 'dog' | 'cat' | 'cow';
-type Hazard = { id: number; kind: AnimalKind; x: number; z: number; vx: number; size: number; judged: boolean; active: boolean; phase: number };
+type AnimalKind = 'chicken' | 'dog' | 'cat' | 'cow' | 'bird';
+type HazardAI = 'hesitant' | 'confident' | 'swooping';
+type Hazard = { id: number; kind: AnimalKind; ai: HazardAI; x: number; z: number; vx: number; size: number; judged: boolean; active: boolean; phase: number };
 type Snapshot = { running: boolean; paused: boolean; complete: boolean; level: number; speed: number; score: number; xp: number; streak: number; integrity: number; hits: number; elapsed: number; distance: number; throttle: number; boost: number; boostCooldown: number; notice: Notice | null; cracks: Crack[] };
 type Engine = Snapshot & { x: number; lane: number; invulnerable: number; spawn: number; publish: number; shake: number; hazards: Hazard[]; sequence: number };
 type EngineRef = React.MutableRefObject<Engine>;
@@ -40,7 +41,7 @@ const LANES = [-2.5, 0, 2.5];
 const clamp = THREE.MathUtils.clamp;
 function makeEngine(level: number): Engine {
   return { running: false, paused: false, complete: false, level, speed: 0, score: 0, xp: 0, streak: 0, integrity: 100, hits: 0, elapsed: 0, distance: 0, throttle: .75, boost: 0, boostCooldown: 0, notice: null, cracks: [], x: 0, lane: 1, invulnerable: 0, spawn: 1.2, publish: 0, shake: 0, sequence: 0,
-    hazards: Array.from({ length: 12 }, (_, id) => ({ id, kind: 'chicken', x: 0, z: -120, vx: 0, size: .35, judged: false, active: false, phase: 0 })) };
+    hazards: Array.from({ length: 12 }, (_, id) => ({ id, kind: 'chicken', ai: 'confident' as HazardAI, x: 0, z: -120, vx: 0, size: .35, judged: false, active: false, phase: 0 })) };
 }
 function snapshot(s: Engine): Snapshot {
   return { running: s.running, paused: s.paused, complete: s.complete, level: s.level, speed: s.speed, score: s.score, xp: s.xp, streak: s.streak, integrity: s.integrity, hits: s.hits, elapsed: s.elapsed, distance: s.distance, throttle: s.throttle, boost: s.boost, boostCooldown: s.boostCooldown, notice: s.notice, cracks: [...s.cracks] };
@@ -213,14 +214,15 @@ const World = React.memo(function World({ engine, levels, publish, hit, nextLeve
       if (s.spawn <= 0) {
         const h = s.hazards.find(h => !h.active);
         if (h) {
-          const kinds: AnimalKind[] = ['chicken', 'dog', 'cat', 'cow'];
-          h.kind = kinds[Math.floor(Math.random() * (s.level === 1 ? 3 : 4))];
-          h.size = h.kind === 'cow' ? 1 : h.kind === 'dog' ? .6 : .42;
+          const kinds: AnimalKind[] = ['chicken', 'dog', 'cat', 'cow', 'bird'];
+          h.kind = kinds[Math.floor(Math.random() * (s.level === 1 ? 3 : kinds.length))];
+          h.ai = h.kind === 'bird' ? 'swooping' : Math.random() > .55 ? 'confident' : 'hesitant';
+          h.size = h.kind === 'cow' ? 1 : h.kind === 'dog' ? .6 : h.kind === 'bird' ? .32 : .42;
           const direction = Math.random() > .5 ? 1 : -1;
           h.x = -direction * 6.8; h.z = -70 - Math.random() * 20;
           // Aim crossing near the car's arrival time, but vary arrival lane for variety.
           const arrival = (3.4 - h.z) / Math.max(10, s.speed / 3.6);
-          h.vx = direction * (5 + Math.random() * 4) / arrival;
+          h.vx = direction * (h.ai === 'confident' ? 7.5 : h.ai === 'hesitant' ? 3.5 : 6) / arrival;
           h.active = true; h.judged = false; h.phase = 0;
         }
         s.spawn = level.spawnEvery + Math.random() * .5;
@@ -228,7 +230,10 @@ const World = React.memo(function World({ engine, levels, publish, hit, nextLeve
       for (const h of s.hazards) {
         if (!h.active) continue;
         const oldZ = h.z, oldX = h.x;
-        h.z += travel; h.x += h.vx * dt; h.phase += dt * 13;
+        const forwardZ = 1; // The camera faces toward +Z; hazards and rain advance from -Z into the cockpit.
+        h.z += travel * forwardZ; h.x += h.vx * dt; h.phase += dt * (h.ai === 'swooping' ? 18 : 13);
+        if (h.ai === 'hesitant') h.x += Math.sin(h.phase * .35) * dt * .7;
+        if (h.ai === 'swooping') h.x += Math.sin(h.phase * .55) * dt * 1.8;
         // Swept crossing test avoids tunnelling at high speed / low framerate.
         if (!h.judged && oldZ <= 3.4 && h.z >= 3.4) {
           h.judged = true;
@@ -393,6 +398,24 @@ function Palm({ side, index }: { side: number; index: number }) {
     </group>)}
   </group>;
 }
+function Shopfront({ side, index }: { side: number; index: number }) {
+  const color = ['#e07a5f', '#3fb7a8', '#e9c46a', '#7c83fd'][index % 4];
+  return <group position={[side * 5.0, 0, 1.5 + (index % 3) * 2.4]}>
+    <Box position={[0, 1.05, 0]} size={[1.7, 2.1, 1.25]} color={color} />
+    <Box position={[0, 2.2, -.05]} size={[1.95, .12, 1.5]} color="#f7d08a" />
+    <Box position={[0, 1.25, -.66]} size={[1.2, .75, .04]} color="#162b3a" glow />
+    <Box position={[0, .42, -.68]} size={[1.25, .06, .06]} color="#f8e7b0" glow />
+  </group>;
+}
+function Bystander({ side, index, engine }: { side: number; index: number; engine: EngineRef }) {
+  const group = useRef<THREE.Group>(null);
+  useFrame(() => { if (group.current) group.current.rotation.z = Math.sin(engine.current.elapsed * 4 + index) * .05; });
+  return <group ref={group} position={[side * 4.45, .05, -3 - (index % 4) * 3]}>
+    <mesh position={[0, .6, 0]}><sphereGeometry args={[.18, 8, 6]} /><meshStandardMaterial color="#d8a47f" /></mesh>
+    <Box position={[0, .3, 0]} size={[.32, .5, .22]} color={index % 2 ? '#f4a261' : '#56cfe1'} />
+    <mesh position={[side * .22, .58 + Math.sin(engine.current.elapsed * 7 + index) * .12, 0]} rotation={[0, 0, side * -.6]}><boxGeometry args={[.08, .42, .08]} /><meshStandardMaterial color="#d8a47f" /></mesh>
+  </group>;
+}
 function Streets({ engine }: { engine: EngineRef }) {
   const groups = useRef<(THREE.Group | null)[]>([]);
   const offset = useRef(0);
@@ -403,7 +426,7 @@ function Streets({ engine }: { engine: EngineRef }) {
   });
   return <>{Array.from({ length: 20 }, (_, i) => <group ref={g => { groups.current[i] = g; }} key={i} position={[0, 0, 12 - i * 10]}>
     <Building side={-1} index={i} /><Pier index={i} />
-    {i % 2 === 0 && <Palm side={-1} index={i} />}{i % 3 === 1 && <Palm side={1} index={i + 1} />}
+    {i % 2 === 0 && <Palm side={-1} index={i} />}{i % 3 === 1 && <Palm side={1} index={i + 1} />}{i % 4 === 0 && <Shopfront side={-1} index={i} />}{i % 5 === 0 && <Bystander side={1} index={i} engine={engine} />}
     {[-1, 1].map(side => <group key={side} position={[side * 4.95, 0, 2]}>
       <mesh position={[0, 2.9, 0]}><cylinderGeometry args={[.035, .045, 5.8, 6]} /><meshStandardMaterial color="#5f686f" /></mesh>
       <Box position={[-side * .27, 5.75, 0]} size={[.6, .06, .15]} color="#ffcc86" glow />
@@ -421,8 +444,8 @@ function Animal({ engine, index }: { engine: EngineRef; index: number }) {
     if (!g) return;
     g.visible = h.active;
     if (!h.active) return;
-    const bird = h.kind === 'chicken', cow = h.kind === 'cow', cat = h.kind === 'cat';
-    g.position.set(h.x, .02, h.z); g.rotation.y = h.vx > 0 ? 0 : Math.PI;
+    const bird = h.kind === 'chicken' || h.kind === 'bird', aerial = h.kind === 'bird'; const cow = h.kind === 'cow', cat = h.kind === 'cat';
+    g.position.set(h.x, aerial ? 1.15 + Math.sin(h.phase * .4) * .75 : .02, h.z); g.rotation.y = h.vx > 0 ? 0 : Math.PI;
     g.scale.setScalar(cow ? 1.55 : bird ? .7 : cat ? .72 : .95);
     if (body.current) { body.current.scale.set(1.2, bird ? .78 : .67, .56); (body.current.material as THREE.MeshStandardMaterial).color.set(cow ? '#ddd6bd' : bird ? '#d9bd87' : cat ? '#9295a0' : '#9d6d47'); }
     if (head.current) head.current.position.set(.65, bird ? .8 : .75, 0);
@@ -456,7 +479,7 @@ function Rain({ engine }: { engine: EngineRef }) {
     const s = engine.current; if (s.paused || !s.running) return;
     const dt = Math.min(rawDt, .05), a = geometry.attributes.position.array as Float32Array;
     for (let i = 0; i < a.length; i += 6) {
-      a[i + 1] -= dt * 9; a[i + 2] += dt * (s.speed / 3.6 + 5);
+      a[i + 1] -= dt * 9; a[i + 2] += dt * (s.speed / 3.6 + 5) * 1; // forward is +Z in the cockpit coordinate system
       if (a[i + 1] < -.3) a[i + 1] = 19;
       if (a[i + 2] > 6) a[i + 2] = -100;
       a[i + 3] = a[i] + .025; a[i + 4] = a[i + 1] - .5; a[i + 5] = a[i + 2] + .12;

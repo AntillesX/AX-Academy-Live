@@ -1,0 +1,7 @@
+'use client';
+const QUEUE_KEY = 'ax.offline.mutationQueue.v1';
+export interface QueuedMutation { id: string; url: string; payload: unknown; timestamp: number }
+function readQueue(): QueuedMutation[] { try { const raw = localStorage.getItem(QUEUE_KEY); const value = raw ? JSON.parse(raw) : []; return Array.isArray(value) ? value : []; } catch { return []; } }
+function saveQueue(queue: QueuedMutation[]) { try { localStorage.setItem(QUEUE_KEY, JSON.stringify(queue)); } catch {} }
+export function enqueueMutation(url: string, payload: unknown) { if (typeof window === 'undefined') return; const queue = readQueue(); queue.push({ id: crypto.randomUUID(), url, payload, timestamp: Date.now() }); saveQueue(queue); if ('serviceWorker' in navigator && 'SyncManager' in window) navigator.serviceWorker.ready.then(registration => (registration as ServiceWorkerRegistration & { sync?: { register: (tag: string) => Promise<void> } }).sync?.register('ax-sync')).catch(() => undefined); }
+export async function flushMutations() { if (typeof window === 'undefined' || !navigator.onLine) return; const pending = readQueue(); const remaining: QueuedMutation[] = []; for (const item of pending) { try { const response = await fetch(item.url, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(item.payload) }); if (!response.ok) remaining.push(item); } catch { remaining.push(item); } } saveQueue(remaining); }
