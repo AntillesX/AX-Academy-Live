@@ -1,4 +1,35 @@
 import Link from 'next/link';
 import ArtIcon from '@/components/icons/ArtIcon';
-const games = [['NEON//DRIFT 4D','A React Three Fiber racing focus run through a responsive signal tunnel.','01','number_sequence','/arcade'],['Island Resilience 360','Balance water, energy, coastal protection, and community capacity.','02','community','/arcade/island-resilience'],['Coastal Fishing','Tide & Net: make sustainable fishing decisions across a living reef.','03','community','/games/coastal-fishing'],['Pattern Sprint','Train recall with short visual sequences and reflection checkpoints.','04','word_unscramble','/dashboard']] as const;
-export default function GamesPage(){return <div className="mx-auto max-w-7xl px-4 py-10 lg:px-8"><p className="eyebrow">Arcade · focus engine</p><h1 className="mt-3 text-4xl font-black text-white">Make focus feel <span className="text-cyan-300">playable.</span></h1><p className="mt-4 max-w-2xl text-slate-400">Short strategy and attention missions that reward reflection and academic milestones—not endless scrolling.</p><div className="mt-10 grid gap-4 md:grid-cols-2 lg:grid-cols-4">{games.map(([title,copy,number,art,href])=><Link href={href} className="glass glass-hover rounded-3xl p-6" key={title}><div className="flex items-start justify-between"><ArtIcon name={art} size="md"/><span className="text-4xl font-black text-violet-300/40">{number}</span></div><h2 className="mt-8 text-2xl font-black text-white">{title}</h2><p className="mt-3 text-sm leading-6 text-slate-400">{copy}</p><span className="btn-secondary mt-8 w-full">Launch focus run →</span></Link>)}</div><div className="mt-8 glass rounded-2xl p-5"><p className="text-sm font-bold text-white">Learning loop</p><p className="mt-2 text-sm text-slate-500">Arcade results remain closed-loop learning telemetry. They are not cash, prizes, or financial instruments.</p><Link href="/dashboard" className="mt-4 inline-block text-sm font-bold text-cyan-300">Return to dashboard →</Link></div></div>}
+
+const games = [
+  ['NEON//DRIFT 4D', 'A React Three Fiber racing focus run through a responsive signal tunnel.', '01', 'number_sequence', '/arcade'],
+  ['Island Resilience 360', 'Balance water, energy, coastal protection, and community capacity.', '02', 'community', '/arcade/island-resilience'],
+  ['Carib Skydive', 'Fly through Green FOOD, Red MEDICAL, Yellow SOLAR, and Blue WATER rings.', '03', 'community', '/games/carib-skydive'],
+  ['Coastal Fishing', 'Tide & Net: make sustainable fishing decisions across a living reef.', '04', 'community', '/games/coastal-fishing'],
+  ['Pattern Sprint', 'Train recall with short visual sequences and reflection checkpoints.', '05', 'word_unscramble', '/dashboard'],
+] as const;
+
+export default function GamesPage() {
+  return (
+    <div className="mx-auto max-w-7xl px-4 py-10 lg:px-8">
+      <p className="eyebrow">Arcade · focus engine</p>
+      <h1 className="mt-3 text-4xl font-black text-white">Make focus feel <span className="text-cyan-300">playable.</span></h1>
+      <p className="mt-4 max-w-2xl text-slate-400">Short strategy and attention missions that reward reflection and academic milestones—not endless scrolling.</p>
+      <div className="mt-10 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        {games.map(([title, copy, number, art, href]) => (
+          <Link href={href} className="glass glass-hover rounded-3xl p-6" key={title}>
+            <div className="flex items-start justify-between"><ArtIcon name={art} size="md" label={title} /><span className="text-4xl font-black text-violet-300/40">{number}</span></div>
+            <h2 className="mt-8 text-2xl font-black text-white">{title}</h2>
+            <p className="mt-3 text-sm leading-6 text-slate-400">{copy}</p>
+            <span className="btn-secondary mt-8 w-full">Launch focus run →</span>
+          </Link>
+        ))}
+      </div>
+      <div className="mt-8 glass rounded-2xl p-5">
+        <p className="text-sm font-bold text-white">Learning loop</p>
+        <p className="mt-2 text-sm text-slate-500">Arcade results remain closed-loop learning telemetry. They are not cash, prizes, or financial instruments.</p>
+        <Link href="/dashboard" className="mt-4 inline-block text-sm font-bold text-cyan-300">Return to dashboard →</Link>
+      </div>
+    </div>
+  );
+}
