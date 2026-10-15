@@ -5,7 +5,7 @@ import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import StudyMusicPlayer from '@/components/StudyMusicPlayer';
 type Video = { id: string; title: string; category: string; youtube_url: string };
-const links = [['⌂', 'Dashboard', '/dashboard'], ['▣', 'CSEC HUB', '/csec-hub'], ['✦', 'Arcade', '/arcade'], ['◎', 'Community', '/community']];
+const links = [['⌂', 'Dashboard', '/dashboard'], ['▣', 'ACADEMIC HUB', '/csec-hub'], ['✦', 'Arcade', '/arcade'], ['◎', 'Community', '/community']];
 const socials = [['TikTok', 'https://tiktok.com/@antillesx', '♪'], ['Telegram', 'https://t.me/AX_Academy_Solutions_ltd', '➤'], ['Facebook', 'https://www.facebook.com/share/1C9dvFV7Yj/', 'f'], ['YouTube', 'https://www.youtube.com/@Ax_Academy_Solutions', '▶'], ['Instagram', 'https://instagram.com/antilles.x?dlrf=dGhhZmZ5eHoxOXF0', '◎']];
 const PILL = 'inline-flex min-h-9 shrink-0 items-center gap-1 rounded-full border-2 border-cyan-300/60 bg-slate-900 px-3 text-xs font-black text-white transition hover:border-cyan-200 hover:bg-slate-800 hover:shadow-[0_0_18px_rgba(34,211,238,.28)] sm:min-h-11 sm:gap-2 sm:px-4 sm:text-sm';
 function embedUrl(url: string) { const match = url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|shorts\/|embed\/))([A-Za-z0-9_-]{11})/i); return match ? `https://www.youtube-nocookie.com/embed/${match[1]}?rel=0&modestbranding=1` : url; }
