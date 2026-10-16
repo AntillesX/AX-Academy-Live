@@ -21,7 +21,7 @@ const missions = [
 export default async function CommunityPage() {
   const session = await getSession();
   const guest = !session?.userId;
-  return <main className="mx-auto max-w-[1600px] px-3 py-6 sm:px-5 lg:px-8">
+  return <main className="mx-auto max-w-[1600px] bg-[#0B0F17] px-3 py-6 sm:px-5 lg:px-8">
     <section className="relative overflow-hidden rounded-[2rem] border border-cyan-300/25 bg-[#04152a] shadow-[0_0_80px_rgba(8,145,178,.18)]">
       <div className="absolute inset-0"><Image src="/references/theo-island-live-build.jpg" alt="Theo Island live ecosystem command map" fill priority sizes="(max-width: 1600px) 100vw, 1600px" className="object-cover object-center opacity-75" /></div>
       <div className="absolute inset-0 bg-gradient-to-b from-[#031226]/85 via-transparent to-[#020617]/95" />
