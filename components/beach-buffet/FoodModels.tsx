@@ -1,0 +1,4 @@
+'use client';
+import { useBeachBuffetRenderStore } from '@/lib/game/beach-buffet-store';
+const foods = [{ id: 'fruit', label: 'Tropical fruit', icon: '/assets/icons/food-tray.svg' }, { id: 'reef-safe', label: 'Reef-safe plate', icon: '/assets/icons/beach-buffet.svg' }, { id: 'water', label: 'Fresh water', icon: '/assets/icons/realtime-effects.svg' }];
+export default function FoodModels() { const selected = useBeachBuffetRenderStore(state => state.selectedFood); return <div className="grid grid-cols-3 gap-3">{foods.map(food => <div key={food.id} className={`rounded-2xl border p-3 transition ${selected === food.id ? 'border-cyan-300 bg-cyan-300/10 shadow-[0_0_20px_rgba(34,211,238,.25)]' : 'border-white/10 bg-black/20'}`}><img src={food.icon} alt="" className="mx-auto h-16 w-16" /><p className="mt-2 text-center text-xs font-bold text-white">{food.label}</p></div>)}</div>; }

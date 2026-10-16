@@ -1,0 +1,13 @@
+'use client';
+import type { RealtimeChannel } from '@supabase/supabase-js';
+import { createClient } from '@/lib/supabase/client';
+import { useBeachBuffetRenderStore, type BuffetSession } from './beach-buffet-store';
+
+export type BeachBuffetEngine = { start: () => Promise<void>; stop: () => Promise<void>; publish: (patch: Partial<BuffetSession>) => Promise<void> };
+const table = 'beach_buffet_sessions';
+function normalize(row: Record<string, unknown>): Partial<BuffetSession> { return { id: String(row.id || ''), score: Number(row.score || 0), combo: Number(row.combo || 0), selectedFood: typeof row.selected_food === 'string' ? row.selected_food : null, servedCount: Number(row.served_count || 0), status: row.status === 'complete' ? 'complete' : row.status === 'playing' ? 'playing' : 'idle', updatedAt: String(row.updated_at || new Date().toISOString()) }; }
+export function createBeachBuffetEngine(sessionId: string): BeachBuffetEngine {
+  const supabase = createClient(); let channel: RealtimeChannel | null = null; let stopped = false;
+  const apply = (row: Record<string, unknown>) => { if (!stopped && (!row.id || String(row.id) === sessionId)) useBeachBuffetRenderStore.getState().applySession(normalize(row)); };
+  return { start: async () => { stopped = false; const store = useBeachBuffetRenderStore.getState(); store.applySession({ id: sessionId }); store.setConnection('connecting'); const { data } = await supabase.from(table).select('*').eq('id', sessionId).maybeSingle(); if (data) apply(data as Record<string, unknown>); channel = supabase.channel(`beach-buffet:${sessionId}`).on('postgres_changes', { event: '*', schema: 'public', table, filter: `id=eq.${sessionId}` }, (payload) => apply((payload.new || payload.old || {}) as Record<string, unknown>)); channel.subscribe((status) => useBeachBuffetRenderStore.getState().setConnection(status === 'SUBSCRIBED' ? 'realtime' : status === 'CHANNEL_ERROR' ? 'offline' : 'connecting')); }, stop: async () => { stopped = true; if (channel) await supabase.removeChannel(channel); channel = null; useBeachBuffetRenderStore.getState().setConnection('offline'); }, publish: async (patch) => { const current = useBeachBuffetRenderStore.getState(); const row = { id: sessionId, score: patch.score ?? current.score, combo: patch.combo ?? current.combo, selected_food: patch.selectedFood ?? current.selectedFood, served_count: patch.servedCount ?? current.servedCount, status: patch.status ?? current.status, updated_at: new Date().toISOString() }; useBeachBuffetRenderStore.getState().applySession(normalize(row)); await supabase.from(table).upsert(row, { onConflict: 'id' }); } };
+}
