@@ -217,7 +217,7 @@ function drawStack(f: F, x: number, y: number, z: number, seed: number) {
       const col = CONT[Math.floor(hash2(i + seed, j + l, 6) * CONT.length)];
       box(g, cx, cy, zz, 1.2, 0.55, 0.5, col);
       for (let r = 1; r < 5; r++) facePoly(g, "L", cx, cy, zz, 1.2, 0.55, r * 0.2 - 0.02, 0.04, r * 0.2 + 0.01, 0.46, shade(col, 0.75));
-      if (j === 1 && hash2(i + seed, l, 7) > 0.35) faceText(g, "CARIB CARGO", cx, cy, zz, 1.2, 0.55, 0.5, "L", "#e8fbff");
+      if (j === 1 && hash2(i + seed, l, 7) > 0.35) faceText(g, "SKY FAAAALLL", cx, cy, zz, 1.2, 0.55, 0.5, "L", "#e8fbff");
     }
   }
 }
@@ -657,7 +657,7 @@ const LABELS: Record<ZoneId, LabelSpec> = {
   beach: { lines: ["BEACH & FISHING", "DOCK"], fill: "#1f7e9c", edge: "#14566b", dx: -120, dy: 70 },
   mountain: { lines: ["MOUNTAIN", "COUNTRYSIDE"], fill: "#8a5a3a", edge: "#5f3b22", dx: 0, dy: -30 },
   jungle: { lines: ["RAINFOREST", "JUNGLE"], fill: "#6b8f23", edge: "#496414", dx: 0, dy: -110, zig: true },
-  port: { lines: ["MARKET PORT"], fill: "#c9732b", edge: "#8f4f1a", dx: 40, dy: 70, sub: "CARIB CARGO" },
+  port: { lines: ["MARKET PORT"], fill: "#c9732b", edge: "#8f4f1a", dx: 40, dy: 70, sub: "SKY FAAAALLL" },
   carnival: { lines: ["CARNIVAL", "PARADE ROUTE"], fill: "#c43fd6", edge: "#8f2a9e", dx: 30, dy: -70, zig: true },
 };
 interface Hit { zone: ZoneId; x: number; y: number; w: number; h: number }
